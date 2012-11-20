@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+        <TableRow
+        android:id="@+id/tableRow1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:minHeight="60px" >
+
+                 <TextView
+                     android:id="@+id/TextView02"
+                     android:layout_width="fill_parent"
+                     android:layout_height="fill_parent"
+                     android:text="Take Photo: "
+                     android:textSize="25px" >
+
+ </TextView>
+
+                 <ImageButton
+                     android:id="@+id/imageButton1"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:src="@drawable/ic_launcher" android:onClick="takephoto" />
+
+    </TableRow>
+        <TableRow
+        android:id="@+id/tableRow1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:minHeight="60px" >
+                 <TextView
+                     android:id="@+id/TextView03"
+                     android:layout_width="fill_parent"
+                     android:layout_height="fill_parent"
+                     android:text="Take Video: "
+                     android:textSize="25px" >
+
+ </TextView>
+
+                 <ImageButton
+                     android:id="@+id/imageButton1"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:src="@drawable/ic_launcher" />
+
+    </TableRow>
+                <TableRow
+        android:id="@+id/tableRow3"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:minHeight="60px" >
+
+                 <TextView
+                     android:id="@+id/TextView03"
+                     android:layout_width="fill_parent"
+                     android:layout_height="fill_parent"
+                     android:text="Select from Gallery: "
+                     android:textSize="25px" >
+
+ </TextView>
+
+                 <Gallery
+                     android:id="@+id/gallery1"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content" />
+
+    </TableRow>
+            <TableRow
+        android:id="@+id/tableRow1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:minHeight="60px" >
+
+                <Button
+                    android:id="@+id/button1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Done" />
+
+    </TableRow>
+</TableLayout>
