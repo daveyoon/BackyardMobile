@@ -1,14 +1,143 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/TableLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:text="@string/hello_world"
-        tools:context=".MainActivity" />
+    <TableRow
+        android:id="@+id/tableRow1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:minHeight="60px" >
 
-</RelativeLayout>
+                 <TextView
+                     android:id="@+id/TextView02"
+                     android:layout_width="fill_parent"
+                     android:layout_height="fill_parent"
+                     android:text="Sector: " android:textSize="25px">
+
+ </TextView>
+
+                 <Spinner
+                     android:id="@+id/spinner1"
+                     android:layout_width="fill_parent"
+                     android:layout_height="fill_parent" android:entries="@array/sector_arrays"/>
+
+    </TableRow>
+    <TableRow
+        android:id="@+id/tableRow5"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:minHeight="60px" >
+
+                 <TextView
+                     android:id="@+id/TextViewIssue"
+                     android:layout_width="fill_parent"
+                     android:layout_height="fill_parent"
+                     android:text="Issue: " android:textSize="25px">
+
+ </TextView>
+
+                 <Spinner
+                     android:id="@+id/spinner2"
+                     android:layout_width="fill_parent"
+                     android:layout_height="fill_parent" android:entries="@array/issue_arrays"/>
+
+    </TableRow>
+    <TableRow
+        android:id="@+id/tableRow2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:minHeight="60px" >
+
+         <TextView
+             android:id="@+id/TextView01"
+             android:layout_width="fill_parent"
+             android:layout_height="fill_parent"
+             android:text="Company: " android:textSize="25px" >
+
+ </TextView>
+ <AutoCompleteTextView xmlns:android="http://schemas.android.com/apk/res/android" 
+    android:id="@+id/autocomplete_country"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" />
+
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:minHeight="160px" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:text="Report" android:textSize="25px"/>
+
+        <EditText
+            android:id="@+id/editText1"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:ems="10"
+            android:inputType="textMultiLine" />
+
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:minHeight="60px" >
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:text="Location" android:textSize="25px"/>
+
+        <Button
+            android:id="@+id/button1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pick Location" android:onClick="GetLocation" />
+
+    </TableRow>
+        <TableRow
+        android:id="@+id/tableRow4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:minHeight="60px" >
+
+        <Button
+            android:id="@+id/button3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Multimedia" android:onClick="addmultimedia"/>
+
+        <Button
+            android:id="@+id/button2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Submit" />
+
+    </TableRow>
+            <TableRow
+        android:id="@+id/tableRow4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" android:minHeight="60px" >
+                <TextView
+            android:id="@+id/lat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="unknown"
+            android:textSize="20dip" >
+        </TextView>
+                        <TextView
+            android:id="@+id/lng"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="unknown"
+            android:textSize="20dip" >
+        </TextView>
+
+    </TableRow>
+
+</TableLayout>

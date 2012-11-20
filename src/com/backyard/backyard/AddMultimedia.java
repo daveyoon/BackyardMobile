@@ -115,5 +115,15 @@ public class AddMultimedia extends Activity{
     	
         startActivityForResult(cameraIntent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);  
     }
+    public void takevideo(View v)
+    {
+    	Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_VIDEO_CAPTURE);
+        fileUri = getOutputMediaFileUri(MEDIA_TYPE_VIDEO); // create a file to save the image
+        File f = getOutputMediaFile(MEDIA_TYPE_VIDEO);
+        Log.d("file", f.toURI().toString());
+    	cameraIntent.putExtra("output",f.toURI()); // set the image file name
+    	
+        startActivityForResult(cameraIntent, CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE);  
+    }
 
 }
