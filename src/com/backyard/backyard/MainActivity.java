@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -59,6 +60,19 @@ public class MainActivity extends Activity implements LocationListener{
         getMenuInflater().inflate(R.menu.activity_main, menu);
         return true;
     }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case 0:
+                startActivity(new Intent(this, ShowSettingsActivity.class));
+                return true;
+
+        }
+
+        return false;
+    }
+
 
     /* Request updates at startup */
     @Override
