@@ -1,8 +1,18 @@
 package com.backyard.backyard;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import javax.crypto.Cipher;
+import javax.crypto.CipherOutputStream;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.SecretKeySpec;
 
 import android.app.Activity;
 import android.content.Context;
@@ -58,6 +68,9 @@ public class AddMultimedia extends Activity{
 
         if (requestCode == CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE) {
             if (resultCode == RESULT_OK) {
+            	//
+            	Log.d("Data",data.getData().toString());
+
                 // Video captured and saved to fileUri specified in the Intent
                 Toast.makeText(this, "Video saved to:\n" +
                          data.getData(), Toast.LENGTH_LONG).show();
@@ -89,6 +102,7 @@ public class AddMultimedia extends Activity{
         // Create a media file name
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         File mediaFile;
+        Log.d("My file",String.valueOf(type));
         if (type == MEDIA_TYPE_IMAGE){
             mediaFile = new File(mediaStorageDir.getPath() + File.separator +
             "IMG_"+ timeStamp + ".jpg");
@@ -98,7 +112,7 @@ public class AddMultimedia extends Activity{
         } else {
             return null;
         }
-
+        //we encrypt the file
         return mediaFile;
     }
     private static Uri getOutputMediaFileUri(int type){
@@ -111,6 +125,7 @@ public class AddMultimedia extends Activity{
         fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE); // create a file to save the image
         File f = getOutputMediaFile(MEDIA_TYPE_IMAGE);
         Log.d("file", f.toURI().toString());
+        
     	cameraIntent.putExtra("output",f.toURI()); // set the image file name
     	
         startActivityForResult(cameraIntent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);  
@@ -121,9 +136,37 @@ public class AddMultimedia extends Activity{
         fileUri = getOutputMediaFileUri(MEDIA_TYPE_VIDEO); // create a file to save the image
         File f = getOutputMediaFile(MEDIA_TYPE_VIDEO);
         Log.d("file", f.toURI().toString());
-    	cameraIntent.putExtra("output",f.toURI()); // set the image file name
+        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, f.toURI());
+    	//cameraIntent.putExtra("output",); // set the image file name
+    	
     	
         startActivityForResult(cameraIntent, CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE);  
+    }
+    //function to perform the encryption before saving to the SD Card
+    static void encrypt(File file) throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException
+    {
+    	// Here you read the cleartext.
+        FileInputStream fis = new FileInputStream(file);
+        // This stream write the encrypted text. This 	stream will be wrapped by another stream.
+        FileOutputStream fos = new FileOutputStream(file);
+
+        // Length is 16 byte
+        SecretKeySpec sks = new SecretKeySpec("BackYardSourceMap$2012".getBytes(), "AES");
+        // Create cipher
+        Cipher cipher = Cipher.getInstance("AES");
+        cipher.init(Cipher.ENCRYPT_MODE, sks);
+        // Wrap the output stream
+        CipherOutputStream cos = new CipherOutputStream(fos, cipher);
+        // Write bytes
+        int b;
+        byte[] d = new byte[8];
+        while((b = fis.read(d)) != -1) {
+            cos.write(d, 0, b);
+        }
+        // Flush and close streams.
+        cos.flush();
+        cos.close();
+        fis.close();
     }
 
 }
