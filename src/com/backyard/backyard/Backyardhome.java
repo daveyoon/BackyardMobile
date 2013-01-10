@@ -239,10 +239,11 @@ public class Backyardhome extends Activity {
 					HttpPost httpPost = new HttpPost("http://beta.mysourcemap.com/file/accept_upload?format=json");
 					try 
 			        {
-			            MultipartEntity entity = new MultipartEntity(HttpMultipartMode.BROWSER_COMPATIBLE );
+			            MultipartEntity entity = new MultipartEntity();
 			            entity.addPart("file", new FileBody(videofile));
 			            entity.addPart("uploaded_file", new FileBody(new File(report._video)));
-			            entity.addPart("video[title]", new StringBody("Backyard"));
+			            entity.addPart("related_id", new StringBody(objectid));
+			            entity.addPart("related_to", new StringBody("thing"));
 			            entity.addPart("video[file]", new FileBody(new File(report._video)));
 			            httpPost.setEntity(entity);
 
