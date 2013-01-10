@@ -11,7 +11,7 @@
         android:minHeight="60px" >
 
                  <TextView
-                     android:id="@+id/TextView02"
+                     android:id="@+id/sector"
                      android:layout_width="fill_parent"
                      android:layout_height="fill_parent"
                      android:text="Sector: " android:textSize="25px">
@@ -19,7 +19,7 @@
  </TextView>
 
                  <Spinner
-                     android:id="@+id/spinner1"
+                     android:id="@+id/sectorvalue"
                      android:layout_width="fill_parent"
                      android:layout_height="fill_parent" android:entries="@array/sector_arrays"/>
 
@@ -69,13 +69,13 @@
         android:layout_height="wrap_content" android:minHeight="160px" >
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/description"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:text="Report" android:textSize="25px"/>
 
         <EditText
-            android:id="@+id/editText1"
+            android:id="@+id/reportfield"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:ems="10"
@@ -106,38 +106,32 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" android:minHeight="60px" >
 
-        <Button
-            android:id="@+id/button3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add Multimedia" android:onClick="addmultimedia"/>
+            <Button
+                android:id="@+id/button4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Photo" android:onClick="takephoto" />
 
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Submit" />
+                        <Button
+                            android:id="@+id/video"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Video" android:onClick="takevideo" />
 
     </TableRow>
+
             <TableRow
         android:id="@+id/tableRow4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" android:minHeight="60px" >
-                <TextView
-            android:id="@+id/lat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="unknown"
-            android:textSize="20dip" >
-        </TextView>
-                        <TextView
-            android:id="@+id/lng"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="unknown"
-            android:textSize="20dip" >
-        </TextView>
 
     </TableRow>
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="submit"
+                android:text="Submit" />
 
 </TableLayout>

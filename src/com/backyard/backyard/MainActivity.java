@@ -1,36 +1,76 @@
 package com.backyard.backyard;
 
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import net.sqlcipher.database.SQLiteDatabase;
+import com.backyard.backyard.AddMultimedia;
 
 public class MainActivity extends Activity implements LocationListener{
 	 private LocationManager locationManager;
 	 private String provider;
+	 ReportDataSQLHelper reportdata;
 
 	 private TextView latituteField;
 	  private TextView longitudeField;
+	  //private TextView sector;
+	  private TextView desc;
+	  private TextView company;
+	  private String sector;
+	  private String issue;
+	  private int lat;
+	  private int lng;
+	  private Spinner spinner,spinnertwo;
+	  private String photopath="";
+	  private String videopath="";
+	  //for the camera functions
+	  
+		private Uri fileUri;
+		public static final int MEDIA_TYPE_IMAGE = 1;
+		public static final int MEDIA_TYPE_VIDEO = 2;
+		private static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 100;
+		private static final int CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE = 200;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        latituteField = (TextView) findViewById(R.id.lat);
-        longitudeField = (TextView) findViewById(R.id.lng);
-        //setContentView(R.layout.location);
-     // Get a reference to the AutoCompleteTextView in the layout
+        //we deal with the database
+        SQLiteDatabase.loadLibs(this);
+        String password = "foo123";
+        reportdata = new ReportDataSQLHelper(this);
+        SQLiteDatabase db = reportdata.getWritableDatabase(password);
+        
+        //latituteField = (TextView) findViewById(R.id.lat);
+        //longitudeField = (TextView) findViewById(R.id.lng);
+        //sector = (TextView) findViewById(R.id.sector);
+        spinner = (Spinner) findViewById(R.id.sectorvalue);
+        spinnertwo = (Spinner) findViewById(R.id.spinner2);
+        
+        desc = (TextView) findViewById(R.id.reportfield);
+        
         AutoCompleteTextView textView = (AutoCompleteTextView) findViewById(R.id.autocomplete_country);
         // Get the string array
         String[] companies = getResources().getStringArray(R.array.company_arrays);
@@ -38,9 +78,10 @@ public class MainActivity extends Activity implements LocationListener{
         ArrayAdapter<String> adapter = 
                 new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, companies);
         textView.setAdapter(adapter);
+        company = (AutoCompleteTextView) findViewById(R.id.autocomplete_country);
+        
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        // Define the criteria how to select the locatioin provider -> use
-        // default
+
         Criteria criteria = new Criteria();
         provider = locationManager.getBestProvider(criteria, false);
         Location location = locationManager.getLastKnownLocation(provider);
@@ -50,8 +91,8 @@ public class MainActivity extends Activity implements LocationListener{
           System.out.println("Provider " + provider + " has been selected.");
           onLocationChanged(location);
         } else {
-        	  latituteField.setText("Location not available");
-              longitudeField.setText("Location not available");
+        	 // latituteField.setText("Location not available");
+              //longitudeField.setText("Location not available");
         }
     }
 
@@ -74,6 +115,7 @@ public class MainActivity extends Activity implements LocationListener{
     }
 
 
+
     /* Request updates at startup */
     @Override
     protected void onResume() {
@@ -90,11 +132,10 @@ public class MainActivity extends Activity implements LocationListener{
 
     @Override
     public void onLocationChanged(Location location) {
-      int lat = (int) (location.getLatitude());
-      int lng = (int) (location.getLongitude());
+      lat = (int) (location.getLatitude());
+      lng = (int) (location.getLongitude());
       Toast.makeText(this, "Latitude " +lat + "and Longitude"+ lng ,
               Toast.LENGTH_SHORT).show();
-      
     }
 
     @Override
@@ -125,5 +166,114 @@ public class MainActivity extends Activity implements LocationListener{
     	Intent intent = new Intent(this, AddMultimedia.class);
     	startActivity(intent);
     	
+    }
+    private void addReport(String sector,String issue,String company,String desc,int lat,int lon,String photo,String video, SQLiteDatabase db) {
+        ContentValues values = new ContentValues();
+        Log.d("sector: ", sector.toString());
+        Log.d("description",desc.toString());
+        values.put(ReportDataSQLHelper.TIME, System.currentTimeMillis());
+        values.put(ReportDataSQLHelper.SECTOR, sector);
+        values.put(ReportDataSQLHelper.ISSUE,issue);
+        values.put(ReportDataSQLHelper.COMPANY, company);
+        values.put(ReportDataSQLHelper.DESC, desc);
+        values.put(ReportDataSQLHelper.LATITUDE, lat);
+        values.put(ReportDataSQLHelper.LONGITUDE, lon);
+        values.put(ReportDataSQLHelper.PHOTO,photo);
+        values.put(ReportDataSQLHelper.VIDEO,video);
+        Log.d("sector: ", values.toString());
+        db.insert(ReportDataSQLHelper.TABLE, null, values);
+        db.close();
+      }
+
+    public void submit(View V)
+    {
+     //we get the database connection
+    Log.d("Insert: ", "Inserting ..");
+    String password = "foo123";
+    reportdata = new ReportDataSQLHelper(this);
+    SQLiteDatabase db = reportdata.getWritableDatabase(password);
+    sector = spinner.getSelectedItem().toString();
+    issue = spinnertwo.getSelectedItem().toString();
+    String comp = company.getText().toString();
+    String description = desc.getText().toString();
+
+    
+    //Log.d("sector: ", sector);
+    //Log.d("photo path", photopath);
+    //Log.d("video path",videopath);
+    addReport(sector,issue,comp,description,lat,lng,photopath,videopath,db);
+    
+    Log.d("Inserted: ", "Inseted");
+    Toast.makeText(this, "Record Saved Successfully",Toast.LENGTH_SHORT).show();
+    Intent intent = new Intent(this, Backyardhome.class);
+    startActivity(intent);
+    	
+    }
+    /** Create a File for saving an image or video */
+    private static File getOutputMediaFile(int type){
+        // To be safe, you should check that the SDCard is mounted
+        // using Environment.getExternalStorageState() before doing this.
+
+        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
+                  Environment.DIRECTORY_PICTURES), "Backyard");
+        // This location works best if you want the created images to be shared
+        // between applications and persist after your app has been uninstalled.
+
+        // Create the storage directory if it does not exist
+        if (! mediaStorageDir.exists()){
+            if (! mediaStorageDir.mkdirs()){
+                Log.d("Backyard", "failed to create directory");
+                return null;
+            }
+        }
+
+        // Create a media file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        File mediaFile;
+        Log.d("My file",String.valueOf(type));
+        if (type == MEDIA_TYPE_IMAGE){
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+            "IMG_"+ timeStamp + ".jpg");
+        } else if(type == MEDIA_TYPE_VIDEO) {
+            mediaFile = new File(mediaStorageDir.getPath() + File.separator +
+            "VID_"+ timeStamp + ".mp4");
+        } else {
+            return null;
+        }
+        //we encrypt the file
+        return mediaFile;
+    }
+    private static Uri getOutputMediaFileUri(int type){
+        return Uri.fromFile(getOutputMediaFile(type));
+    }
+    public void takephoto(View v)
+    {
+    	Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        fileUri = getOutputMediaFileUri(MEDIA_TYPE_IMAGE); // create a file to save the image
+        File f = getOutputMediaFile(MEDIA_TYPE_IMAGE);
+        Log.d("file", f.toURI().toString());
+        
+    	//cameraIntent.putExtra("output",f.toURI());
+        cameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT,fileUri);
+    	// set the image file name
+    	//photopath = f.toURI().toString();
+    	photopath = f.getAbsolutePath();
+        startActivityForResult(cameraIntent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);  
+    }
+    public void takevideo(View v)
+    {
+    	Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_VIDEO_CAPTURE);
+        fileUri = getOutputMediaFileUri(MEDIA_TYPE_VIDEO); // create a file to save the image
+        File f = getOutputMediaFile(MEDIA_TYPE_VIDEO);
+        Log.d("file", f.toURI().toString());
+        
+        //cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, f.toURI());
+        cameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT,fileUri);
+    	//cameraIntent.putExtra("output",); // set the image file name
+        cameraIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+        //videopath = f.toURI().toString();
+        videopath = f.getAbsolutePath();
+    	
+        startActivityForResult(cameraIntent, CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE);  
     }
 }

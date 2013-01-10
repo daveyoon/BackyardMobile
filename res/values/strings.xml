@@ -4,6 +4,9 @@
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_main">Backyard</string>
+    <string name="username"></string>
+    <string name="password"></string>
+    <string name="unlockcode"></string>
    <string-array name="sector_arrays">
         <item>Forestry</item>
         <item>Mining</item>
