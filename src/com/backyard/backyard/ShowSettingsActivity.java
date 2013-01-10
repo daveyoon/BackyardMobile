@@ -2,13 +2,17 @@ package com.backyard.backyard;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.preference.PreferenceActivity;
+import android.preference.PreferenceFragment;
 
-public class ShowSettingsActivity extends PreferenceActivity {
+
+public class ShowSettingsActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.preferences);
+        // Display the fragment as the main content.
+        getFragmentManager().beginTransaction()
+                .replace(android.R.id.content, new SettingsFragment())
+                .commit();
         
      }
 
