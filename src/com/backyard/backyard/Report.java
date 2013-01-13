@@ -1,5 +1,7 @@
 package com.backyard.backyard;
 
+import android.provider.BaseColumns;
+
 public class Report {
 	int _id;
 	String _sector;
@@ -40,6 +42,9 @@ public class Report {
     	int timeinmills = ((int) System.currentTimeMillis()); 
         return this._timeinmills;
     }
+    public int getID() {
+        return this._id;
+      }
     public void setSector(String sector) {
         this._sector = sector;
       }

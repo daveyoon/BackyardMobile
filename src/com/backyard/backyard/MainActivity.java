@@ -40,8 +40,8 @@ public class MainActivity extends Activity implements LocationListener{
 	  private TextView company;
 	  private String sector;
 	  private String issue;
-	  private int lat;
-	  private int lng;
+	  private double lat;
+	  private double lng;
 	  private Spinner spinner,spinnertwo;
 	  private String photopath="";
 	  private String videopath="";
@@ -132,10 +132,13 @@ public class MainActivity extends Activity implements LocationListener{
 
     @Override
     public void onLocationChanged(Location location) {
-      lat = (int) (location.getLatitude());
-      lng = (int) (location.getLongitude());
+      lat = location.getLatitude();
+      lng = location.getLongitude();
+      //lat = (int) (location.getLatitude());
+      //lng = (int) (location.getLongitude());
       Toast.makeText(this, "Latitude " +lat + "and Longitude"+ lng ,
               Toast.LENGTH_SHORT).show();
+     
     }
 
     @Override
@@ -159,7 +162,21 @@ public class MainActivity extends Activity implements LocationListener{
     public void GetLocation(View v)
     {
     	Location location = locationManager.getLastKnownLocation(provider);
-    	onLocationChanged(location);
+    	if (location == null)
+    	{
+    		LocationManager locmgr = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+            Criteria criteria = new Criteria();
+            provider = locmgr.getBestProvider(criteria, false);
+            Location mylocation = locationManager.getLastKnownLocation(provider);
+            lat = mylocation.getLatitude();
+            lng = mylocation.getLongitude();
+            Toast.makeText(this, "Latitude " +lat + "and Longitude"+ lng ,
+                    Toast.LENGTH_SHORT).show();
+    	}else {
+    		onLocationChanged(location);
+    	}
+    	
     }
     public void addmultimedia(View v)
     {
@@ -167,7 +184,7 @@ public class MainActivity extends Activity implements LocationListener{
     	startActivity(intent);
     	
     }
-    private void addReport(String sector,String issue,String company,String desc,int lat,int lon,String photo,String video, SQLiteDatabase db) {
+    private void addReport(String sector,String issue,String company,String desc,double lat,double lon,String photo,String video, SQLiteDatabase db) {
         ContentValues values = new ContentValues();
         Log.d("sector: ", sector.toString());
         Log.d("description",desc.toString());
@@ -265,14 +282,16 @@ public class MainActivity extends Activity implements LocationListener{
     	Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_VIDEO_CAPTURE);
         fileUri = getOutputMediaFileUri(MEDIA_TYPE_VIDEO); // create a file to save the image
         File f = getOutputMediaFile(MEDIA_TYPE_VIDEO);
-        Log.d("file", f.toURI().toString());
+        Log.d("video file", f.toURI().toString());
         
         //cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, f.toURI());
         cameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT,fileUri);
+        
     	//cameraIntent.putExtra("output",); // set the image file name
         cameraIntent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
         //videopath = f.toURI().toString();
         videopath = f.getAbsolutePath();
+        
     	
         startActivityForResult(cameraIntent, CAPTURE_VIDEO_ACTIVITY_REQUEST_CODE);  
     }
