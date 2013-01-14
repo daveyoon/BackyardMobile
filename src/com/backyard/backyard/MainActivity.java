@@ -1,8 +1,18 @@
 package com.backyard.backyard;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import javax.crypto.Cipher;
+import javax.crypto.CipherOutputStream;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.SecretKeySpec;
 
 import android.location.Criteria;
 import android.location.Location;
@@ -274,9 +284,49 @@ public class MainActivity extends Activity implements LocationListener{
         cameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT,fileUri);
     	// set the image file name
     	//photopath = f.toURI().toString();
+        try {
+			encrypt(photopath);
+		} catch (InvalidKeyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchPaddingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     	photopath = f.getAbsolutePath();
         startActivityForResult(cameraIntent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);  
     }
+    static void encrypt(String filepath) throws IOException, NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException {
+        // Here you read the cleartext.
+        FileInputStream fis = new FileInputStream(filepath);
+        // This stream write the encrypted text. This stream will be wrapped by another stream.
+        FileOutputStream fos = new FileOutputStream(filepath);
+
+        // Length is 16 byte
+        SecretKeySpec sks = new SecretKeySpec("BackYard2012".getBytes(), "AES");
+        // Create cipher
+        Cipher cipher = Cipher.getInstance("AES");
+        cipher.init(Cipher.ENCRYPT_MODE, sks);
+        // Wrap the output stream
+        CipherOutputStream cos = new CipherOutputStream(fos, cipher);
+        // Write bytes
+        int b;
+        byte[] d = new byte[8];
+        while((b = fis.read(d)) != -1) {
+            cos.write(d, 0, b);
+        }
+        // Flush and close streams.
+        cos.flush();
+        cos.close();
+        fis.close();
+    }
+    
     public void takevideo(View v)
     {
     	Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_VIDEO_CAPTURE);
