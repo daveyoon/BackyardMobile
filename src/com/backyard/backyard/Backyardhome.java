@@ -284,7 +284,7 @@ public class Backyardhome extends Activity {
 				attpairs.add(new BasicNameValuePair("issue", "test issue")); 
 				HttpPost requestpost = new HttpPost("http://beta.mysourcemap.com/thing/update/null?format=json");
 				ArrayList<NameValuePair> postValuePairs = new ArrayList<NameValuePair>();
-				postValuePairs.add(new BasicNameValuePair("site_name", report._sector)); 
+				postValuePairs.add(new BasicNameValuePair("name", report._sector)); 
 		    	postValuePairs.add(new BasicNameValuePair("description",report._desc));
 		    	postValuePairs.add(new BasicNameValuePair("address",report._latitude +", " + report._longitude ));
 		    	postValuePairs.add(new BasicNameValuePair("type", "site"));
